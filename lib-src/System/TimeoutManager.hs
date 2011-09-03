@@ -17,6 +17,9 @@ import           Control.Monad
 import           Data.IORef
 import           Foreign.C.Types
 
+import           Snap.Chat.Internal.Util
+
+
 ------------------------------------------------------------------------------
 data State = Deadline !CTime
            | Canceled
@@ -120,11 +123,12 @@ managerThread :: TimeoutManager -> IO ()
 managerThread tm = loop `finally` (readIORef connections >>= destroyAll)
   where
     --------------------------------------------------------------------------
-    connections = _connections tm
-    getTime     = _getTime tm
-    inactivity  = _inactivity tm
-    morePlease  = _morePlease tm
-    waitABit    = threadDelay 5000000
+    defaultTimeout = _defaultTimeout tm
+    connections    = _connections tm
+    getTime        = _getTime tm
+    inactivity     = _inactivity tm
+    morePlease     = _morePlease tm
+    waitABit       = threadDelay $ seconds $ min defaultTimeout 5
 
     --------------------------------------------------------------------------
     loop = do

@@ -31,6 +31,9 @@ rm -Rf $DIR
 mkdir -p $DIR
 
 EXCLUDES='Main
+Snap.Chat.ChatRoom.Tests
+Snap.Chat.Test.Common
+Snap.Chat.Types.Tests
 '
 
 EXCL=""

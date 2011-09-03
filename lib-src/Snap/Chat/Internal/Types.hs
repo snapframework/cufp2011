@@ -30,7 +30,7 @@ data MessageContents = Talk   { _messageText :: !Text }
                      | Action { _messageText :: !Text }
                      | Join
                      | Leave  { _messageText :: !Text }
-  deriving (Show)
+  deriving (Show, Eq)
 
 
 instance FromJSON MessageContents where
@@ -75,8 +75,21 @@ data Message = Message {
     , _messageTime     :: !EpochTime
     , _messageContents :: !MessageContents
     }
-  deriving (Show)
+  deriving (Show, Eq)
 
+
+------------------------------------------------------------------------------
+getMessageUserName :: Message -> UserName
+getMessageUserName = _messageUser
+
+getMessageTime :: Message -> EpochTime
+getMessageTime = _messageTime
+
+getMessageContents :: Message -> MessageContents
+getMessageContents = _messageContents
+
+
+------------------------------------------------------------------------------
 instance FromJSON Message where
     parseJSON (Object obj) =
         Message                    <$>
@@ -105,6 +118,11 @@ data User = User {
     , _userToken     :: !UserToken
     , _timeoutHandle :: !TimeoutHandle
 }
+
+
+------------------------------------------------------------------------------
+getUserName :: User -> UserName
+getUserName = _userName
 
 
 ------------------------------------------------------------------------------

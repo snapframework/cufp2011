@@ -5,9 +5,17 @@
 
 module Snap.Chat.Types
   ( UserName
+
   , Message
+  , MessageContents(..)
+  , getMessageUserName
+  , getMessageTime
+  , getMessageContents
+
   , UserToken
   , User
+  , getUserName
+
   , ChatRoom
   ) where
 
