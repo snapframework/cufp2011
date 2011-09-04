@@ -15,6 +15,7 @@ module Snap.Chat.Types
   , UserToken
   , User
   , getUserName
+  , getUserToken
 
   , ChatRoom
   ) where

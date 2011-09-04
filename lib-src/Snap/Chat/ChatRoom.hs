@@ -8,6 +8,7 @@ module Snap.Chat.ChatRoom
   , destroyChatRoom
   , withChatRoom
   , joinUser
+  , authenticateUser
   , lookupUser
   , disconnectUser
   , getMessages
@@ -15,6 +16,8 @@ module Snap.Chat.ChatRoom
 
     -- * Exceptions
   , UserAlreadyConnectedException
+  , UserNotConnectedException
+  , UserAuthenticationFailureException
   ) where
 
 
@@ -56,6 +59,33 @@ instance Exception UserAlreadyConnectedException
 
 
 ------------------------------------------------------------------------------
+data UserNotConnectedException = UserNotConnectedException UserName
+  deriving (Typeable)
+
+instance Show UserNotConnectedException where
+  show (UserNotConnectedException u) =
+      concat [ "User \""
+             , T.unpack u
+             , "\" not connected." ]
+
+instance Exception UserNotConnectedException
+
+
+------------------------------------------------------------------------------
+data UserAuthenticationFailureException =
+    UserAuthenticationFailureException UserName
+  deriving (Typeable)
+
+instance Show UserAuthenticationFailureException where
+  show (UserAuthenticationFailureException u) =
+      concat [ "Authentication failed for user \""
+             , T.unpack u
+             , "\"." ]
+
+instance Exception UserAuthenticationFailureException
+
+
+------------------------------------------------------------------------------
 newChatRoom :: Int -> IO ChatRoom
 newChatRoom userTimeout =
     ChatRoom                              <$>
@@ -88,7 +118,7 @@ joinUser userName chatRoom = withMVar userMapMVar $ \userMap -> do
     user <- User                                  <$>
               pure userName                       <*>
               (atomically $ dupTChan chatChannel) <*>
-              mkToken                             <*>
+              makeUserToken                       <*>
               TM.register (disconnectUser userName
                                           disconnectionMessage
                                           chatRoom)
@@ -105,13 +135,16 @@ joinUser userName chatRoom = withMVar userMapMVar $ \userMap -> do
                                     , " has left the channel (timeout). "
                                     ]
 
-    mkToken = withSystemRandom $ \gen -> do
-                  xs <- (replicateM 16 $ uniform gen) :: IO [Word8]
-                  return $ UserToken $ B16.encode $ S.pack xs
-
     timeoutManager = _timeoutManager chatRoom
     userMapMVar    = _userMap chatRoom
     chatChannel    = _chatChannel chatRoom
+
+
+------------------------------------------------------------------------------
+makeUserToken :: IO UserToken
+makeUserToken = withSystemRandom $ \gen -> do
+    xs <- (replicateM 16 $ uniform gen) :: IO [Word8]
+    return $ UserToken $ B16.encode $ S.pack xs
 
 
 ------------------------------------------------------------------------------
@@ -135,6 +168,28 @@ lookupUser :: UserName -> ChatRoom -> IO (Maybe User)
 lookupUser userName chatRoom = withMVar userMapMVar $ flip HT.lookup userName
   where
     userMapMVar    = _userMap chatRoom
+
+
+------------------------------------------------------------------------------
+authenticateUser :: UserName -> UserToken -> ChatRoom -> IO User
+authenticateUser userName userToken chatRoom =
+    withMVar userMapMVar authenticate
+  where
+    userMapMVar    = _userMap chatRoom
+
+    authenticate userMap = do
+        mbU <- HT.lookup userMap userName
+        maybe (throwIO $ UserNotConnectedException userName)
+              (\user ->
+                   if getUserToken user /= userToken
+                     then throwIO $ UserAuthenticationFailureException userName
+                     else do
+                       newToken <- makeUserToken
+                       let u' = user { _userToken = newToken }
+                       HT.insert userMap userName u'
+                       return u')
+              mbU
+                   
 
 
 ------------------------------------------------------------------------------

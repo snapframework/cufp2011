@@ -126,6 +126,11 @@ getUserName = _userName
 
 
 ------------------------------------------------------------------------------
+getUserToken :: User -> UserToken
+getUserToken = _userToken
+
+
+------------------------------------------------------------------------------
 type HashTable k v = HT.CuckooHashTable k v
 
 
