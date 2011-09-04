@@ -27,6 +27,7 @@ Library
                        attoparsec        >= 0.9   && < 0.10,
                        base16-bytestring >= 0.1   && < 0.2,
                        bytestring        >= 0.9   && < 0.10,
+                       clientsession     >= 0.7   && < 0.8,
                        containers        >= 0.4   && < 0.5,
                        hashtables        >= 1.0   && < 1.1,
                        mwc-random        >= 0.10  && < 0.11,
@@ -35,10 +36,12 @@ Library
                        text              >= 0.11  && < 0.12,
                        unix-compat       >= 0.2   && < 0.4
 
-  Exposed-Modules:     Snap.Chat.Types,
+  Exposed-Modules:     Snap.Chat.API.Types,
+                       Snap.Chat.Types,
                        Snap.Chat.ChatRoom,
                        Snap.Chat.Message
-  Other-modules:       Snap.Chat.Internal.Types,
+  Other-modules:       Snap.Chat.Internal.API.Types,
+                       Snap.Chat.Internal.Types,
                        Snap.Chat.Internal.Util,
                        System.TimeoutManager
 
@@ -55,6 +58,7 @@ Executable snap-chat
                        aeson             >= 0.3   && < 0.4,
                        base16-bytestring >= 0.1   && < 0.2,
                        bytestring        >= 0.9   && < 0.10,
+                       clientsession     >= 0.7   && < 0.8,
                        containers        >= 0.4   && < 0.5,
                        hashtables        >= 1.0   && < 1.1,
                        mwc-random        >= 0.10  && < 0.11,

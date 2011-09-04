@@ -16,6 +16,7 @@ Executable testsuite
       attoparsec                 >= 0.9     && < 0.10,
       base16-bytestring          >= 0.1     && < 0.2,
       bytestring                 >= 0.9     && < 0.10,
+      clientsession              >= 0.7     && < 0.8,
       containers                 >= 0.4     && < 0.5,
       deepseq                    >= 1.1     && < 1.2,
       hashtables                 >= 1.0     && < 1.1,

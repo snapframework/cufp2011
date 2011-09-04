@@ -53,20 +53,26 @@ instance FromJSON MessageContents where
     parseJSON _ = fail "MessageContents: JSON object of wrong type"
 
 
+------------------------------------------------------------------------------
 instance ToJSON MessageContents where
     toJSON (Talk t) =
         Object $ Map.fromList [ ("type", toJSON ("talk"::Text))
-                              , ("text", toJSON t             ) ]
+                              , ("text", toJSON t             )
+                              ]
+
     toJSON (Action t) =
         Object $ Map.fromList [ ("type", toJSON ("action"::Text))
-                              , ("text", toJSON t              ) ]
+                              , ("text", toJSON t              )
+                              ]
 
     toJSON (Join) =
-        Object $ Map.fromList [ ("type", toJSON ("join"::Text)) ]
+        Object $ Map.fromList [ ("type", toJSON ("join"::Text))
+                              ]
 
     toJSON (Leave t) =
         Object $ Map.fromList [ ("type", toJSON ("leave"::Text))
-                              , ("text", toJSON t              ) ]
+                              , ("text", toJSON t              )
+                              ]
 
 
 ------------------------------------------------------------------------------
