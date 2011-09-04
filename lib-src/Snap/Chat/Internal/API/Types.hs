@@ -4,15 +4,20 @@ module Snap.Chat.Internal.API.Types where
 
 ------------------------------------------------------------------------------
 import           Control.Applicative
+import           Control.Monad.Reader
 import           Data.Aeson
 import qualified Data.Aeson.Types as A
 import           Data.ByteString.Char8 (ByteString)
 import qualified Data.Map as Map
 import           Data.Text (Text)
 import qualified Data.Text as T
+import           Snap.Types
 ------------------------------------------------------------------------------
 import           Snap.Chat.Internal.Types
 
+
+------------------------------------------------------------------------------
+type ApiHandler a = ReaderT ChatRoom Snap a
 
 ------------------------------------------------------------------------------
 data ApiRequest req = ApiRequest {

@@ -36,7 +36,8 @@ Library
                        text              >= 0.11  && < 0.12,
                        unix-compat       >= 0.2   && < 0.4
 
-  Exposed-Modules:     Snap.Chat.API.Types,
+  Exposed-Modules:     Snap.Chat.API.Handlers,
+                       Snap.Chat.API.Types,
                        Snap.Chat.Types,
                        Snap.Chat.ChatRoom,
                        Snap.Chat.Message
