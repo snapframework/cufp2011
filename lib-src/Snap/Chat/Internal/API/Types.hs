@@ -22,8 +22,7 @@ type ApiHandler a = ReaderT ChatRoom Snap a
 ------------------------------------------------------------------------------
 data ApiRequest req = ApiRequest {
       _encodedSession :: ByteString
-    , _apiUserName    :: Text
-    , _requestType    :: req
+    , _requestData    :: req
     }
 
 
@@ -45,6 +44,24 @@ authenticationFailure =
 
 
 ------------------------------------------------------------------------------
+data EncodedSession = EncodedSession {
+      _sessionToken :: UserToken
+    , _apiUser      :: UserName
+    }
+
+instance FromJSON EncodedSession where
+    parseJSON (Object obj) = EncodedSession <$>
+                             obj .: "token" <*>
+                             obj .: "user"
+    parseJSON _ = fail "EncodedSession: JSON object of wrong type"
+
+instance ToJSON EncodedSession where
+    toJSON (EncodedSession tok user) =
+        Object $ Map.fromList [ ("token", toJSON tok )
+                              , ("user",  toJSON user)
+                              ]
+
+------------------------------------------------------------------------------
 class HasStatus a where
     isFailure     :: a -> Bool
     isFailure _ = False
@@ -60,7 +77,6 @@ class HasStatus a where
 instance (FromJSON req) => FromJSON (ApiRequest req) where
     parseJSON (Object obj) = ApiRequest          <$>
                              obj .: "session"    <*>
-                             obj .: "user"       <*>
                              obj .: "requestData"
 
     parseJSON _ = fail "ApiRequest: JSON object of wrong type"

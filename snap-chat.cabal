@@ -22,19 +22,21 @@ Cabal-version:       >=1.2
 Library
   hs-source-dirs: lib-src
 
-  Build-depends:       base              >= 4.2   && < 5,
-                       aeson             >= 0.3   && < 0.4,
-                       attoparsec        >= 0.9   && < 0.10,
-                       base16-bytestring >= 0.1   && < 0.2,
-                       bytestring        >= 0.9   && < 0.10,
-                       clientsession     >= 0.7   && < 0.8,
-                       containers        >= 0.4   && < 0.5,
-                       hashtables        >= 1.0   && < 1.1,
-                       mwc-random        >= 0.10  && < 0.11,
-                       snap-core         >= 0.5.3 && < 0.6,
-                       stm               >= 2.2   && < 2.3,
-                       text              >= 0.11  && < 0.12,
-                       unix-compat       >= 0.2   && < 0.4
+  Build-depends:       base                      >= 4.2   && < 5,
+                       aeson                     >= 0.3   && < 0.4,
+                       attoparsec                >= 0.9   && < 0.10,
+                       base16-bytestring         >= 0.1   && < 0.2,
+                       bytestring                >= 0.9   && < 0.10,
+                       clientsession             >= 0.7   && < 0.8,
+                       containers                >= 0.4   && < 0.5,
+                       hashtables                >= 1.0   && < 1.1,
+                       MonadCatchIO-transformers >= 0.2   && < 0.3,
+                       mtl                       >= 2     && < 3,
+                       mwc-random                >= 0.10  && < 0.11,
+                       snap-core                 >= 0.5.3 && < 0.6,
+                       stm                       >= 2.2   && < 2.3,
+                       text                      >= 0.11  && < 0.12,
+                       unix-compat               >= 0.2   && < 0.4
 
   Exposed-Modules:     Snap.Chat.API.Handlers,
                        Snap.Chat.API.Types,
