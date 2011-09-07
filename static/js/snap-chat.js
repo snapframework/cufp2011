@@ -13,7 +13,7 @@
           <form>\
             <label for="username">User name:</label>\
             <input maxlength="40" name="username" class="username" \
-                   placeholder="Enter your user name here" type="text"></input>\
+                   type="text"></input>\
             <button type="button" class="cupid-green">Join the chat room</button>\
           </form>\
         </div>\
@@ -24,15 +24,18 @@
             <form>\
               <button type="button" class="logoutButton cupid-green">⇦ Leave chat room</button>\
             </form>\
+            <div class="top-header"><img src="img/logo-small.png"/> \
+            <span class="top-message"></span></div>\
           </div>\
           <div class="chatroom-buffer"><div class="buffer">\
               <div class="chattext"></div>\
           </div></div>\
           <div class="chatroom-input">\
             <form>\
+              <table><tr><td class="inputcell" width="*">\
               <input type="text" maxlength="1024" placeholder="Enter your message here" class="chatinput">\
-              </input>\
-              <button type="button" class="write_message cupid-green">Send</button>\
+              </input></td><td class="buttoncell" style="width: 5em">\
+              <button type="button" class="write_message cupid-green">Send</button></td></tr></table>\
             </form>\
           </div>\
         </div>';
@@ -57,6 +60,12 @@
         }
 
         $(message).effect("highlight", {}, 3000);
+        dataObj.numMessages = dataObj.numMessages + 1;
+
+        // limit browser memory usage.
+        if (dataObj.numMessages > 200) {
+            $('.message:first-child').remove();
+        }
     }
 
     var withZero = function(t) {
@@ -115,7 +124,7 @@
             } else if (type == 'leave') {
                 msg = mkMsg(src.time, src.user, src.contents.text, 'meta');
             } else if (type == 'talk') {
-                msg = mkMsg(src.time, src.user + ':', src.contents.text);
+                msg = mkMsg(src.time, '<' + src.user + '>', src.contents.text);
             } else {
                 msg = mkMsg(src.time, src.user, src.contents.text);
             }
@@ -254,6 +263,9 @@
         var $button = $('.write_message', chatDiv);
         var $input = $('.chatinput', chatDiv);
 
+        $('.top-message',chatDiv).text(
+            dataObj['desiredUserName'] + '@snap-chat');
+        
         $button.click(function () {
             sendMessage(dataObj);
         });
@@ -265,7 +277,7 @@
             }
         });
 
-        setTimeout(function() { $input.focus(); }, 1500);
+        setTimeout(function() { $input.focus(); }, 500);
         fetchMessages(dataObj);
         return this;
     }
@@ -307,13 +319,14 @@
         var dataObj = { loginDiv: _loginDiv,
                         chatDiv: _chatDiv,
                         target: obj,
-                        session: ''
+                        session: '',
+                        numMessages: 0
                       };
 
         setTimeout(function() {
             var $u = $('.username', _loginDiv);
             $u.focus().effect("highlight", 2000);
-        }, 1500);
+        }, 500);
 
         $('.username', _loginDiv).keypress(function(e) {
             if (e.which == 13) {

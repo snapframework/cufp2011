@@ -95,40 +95,29 @@ h1 {
 .loginwindow p.error { color: #911; }
 
 p {
-    letter-spacing: -0.05em;
+    letter-spacing: -0.025em;
     margin-bottom: 1.4em;
 }
 
 .loginwindow {
-    position: absolute;
-    width: 800px;
-    height: 400px;
-    top: 50%; left: 50%;
-    margin-top: -240px;
-    margin-left: -440px;
+    min-width: 400px;
+    max-width: 70ex;
+    width: 60%;
+    height: auto;
+    margin: 4em auto;
     padding: 40px;
     -moz-border-radius: 6px; -webkit-border-radius: 6px; border-radius: 6px;
 }
 
 .chatroom {
-    position: absolute;
-    width: 960px;
+    position: relative;
+    width: 80%;
+    min-width: 400px;
     height: 100%;
     top:0;
-    left: 50%;
-    margin-left: -480px;
+    margin: 0 auto;
     overflow: hidden;
-}
-
-.chatroom .chatroom-top {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2em;
-    background: #333;
-    opacity: 0.8;
-    z-index: 5000;
+    text-align: left;
 }
 
 .chatroom .chatroom-buffer {
@@ -176,7 +165,7 @@ p {
 .chatroom p.message .username {
     color: #005;
     font-weight: bold;
-    padding-right: 1ex;
+    padding-right: 0.5ex;
 }
 
 .chatroom .chatroom-input {
@@ -200,17 +189,30 @@ p {
     line-height: 2.75em;
 }
 
+.chatroom .chatroom-input table {
+    width: 100%;
+    text-align: left;
+    margin: 0 auto;
+}
+
+.chatroom .chatroom-input form td.inputcell {
+    padding: 0 1ex;
+}
+
+.chatroom .chatroom-input form td.buttoncell {
+    padding: 0 1ex 0 0;
+}
+
 .chatroom .chatroom-input form button {
-    margin: 0 1ex;
+    width: 100%;
     vertical-align: middle;
 }
 
 .chatroom .chatroom-input form input.chatinput {
     height: 1.25em;
-    margin: 0 1ex;
-    font-size: x-large;
+    font-size: large;
+    width: 98%;
     border: solid 1px 9a9;
-    width: 85%;
     vertical-align: middle;
 }
 
@@ -220,12 +222,57 @@ input.disabled {
     border: 0;
 }
 
+.chatroom .chatroom-top {
+    text-align: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2em;
+    line-height: 2em;
+    background: #454;
+    z-index: 5000;
+}
+
 .chatroom .chatroom-top form {
-    padding: 8px 8px 8px 2em;
+    position:absolute;
+    top:1em;
+    left:2em;
+    height:1.6em;
+    margin-top: -0.8em;
+    vertical-align: middle;
+}
+
+.chatroom .chatroom-top div.top-header {
+    position: absolute;
+    color: white;
+    font-weight: bold;
+    height: 2.75em;
+    width: auto;
+    top: 0; right: 2em;
+    vertical-align: middle;
+}
+
+.chatroom .chatroom-top div.top-header span {
+    font-size: small;
+    vertical-align: middle;
+}
+
+.chatroom .chatroom-top div.top-header img {
+    width: 32px;
+    height: 27.66px;
+    vertical-align: middle;
+}
+
+.chatroom .chatroom-top form button {
+    position:absolute;
+    top:0; left:0; bottom:0; width: 13em;
+    vertical-align: middle;
 }
 
 #chat-frame {
     width: 100%; height: 100%; position: absolute; top:0; left: 0;
+    text-align: center;
 }
 
 .chatwindow {

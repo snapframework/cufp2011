@@ -17,6 +17,7 @@ import           Data.Attoparsec hiding (try)
 import           Data.ByteString.Char8 (ByteString)
 import qualified Data.ByteString.Char8 as S
 import qualified Data.ByteString.Lazy.Char8 as L
+import           Data.Char
 import qualified Data.Text as T
 import           Prelude hiding (catch)
 import           Snap.Types
@@ -55,7 +56,9 @@ apiCall :: (FromJSON req, ToJSON resp) =>
         -> ApiHandler ()
 apiCall f = method POST $ do
     -- Check that the content-type is JSON.
-    ct <- liftM (getHeader "Content-Type") getRequest
+    ct <- liftM (fmap (S.takeWhile (\c -> c /= ';' && not (isSpace c)))
+                      . getHeader "Content-Type") getRequest
+    
     when (ct /= Just "application/json") $
          finishWith $ setResponseCode 415 emptyResponse
 
