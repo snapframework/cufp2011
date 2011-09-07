@@ -12,6 +12,7 @@ import qualified Data.Map as Map
 import           Data.Text (Text)
 import qualified Data.Text as T
 import           Snap.Types
+import           System.Posix.Types
 ------------------------------------------------------------------------------
 import           Snap.Chat.Internal.Types
 
@@ -46,19 +47,22 @@ authenticationFailure =
 ------------------------------------------------------------------------------
 data EncodedSession = EncodedSession {
       _sessionToken :: UserToken
+    , _sessionTime  :: EpochTime
     , _apiUser      :: UserName
     }
 
 instance FromJSON EncodedSession where
-    parseJSON (Object obj) = EncodedSession <$>
-                             obj .: "token" <*>
+    parseJSON (Object obj) = EncodedSession             <$>
+                             obj .: "token"             <*>
+                             (toEnum <$> obj .: "time") <*>
                              obj .: "user"
     parseJSON _ = fail "EncodedSession: JSON object of wrong type"
 
 instance ToJSON EncodedSession where
-    toJSON (EncodedSession tok user) =
-        Object $ Map.fromList [ ("token", toJSON tok )
-                              , ("user",  toJSON user)
+    toJSON (EncodedSession tok time user) =
+        Object $ Map.fromList [ ("token", toJSON tok            )
+                              , ("user",  toJSON user           )
+                              , ("time",  toJSON $ fromEnum time)
                               ]
 
 ------------------------------------------------------------------------------
@@ -155,7 +159,7 @@ instance ToJSON GetMessagesResponse where
 
 
 ------------------------------------------------------------------------------
-data WriteMessageRequest  = WriteMessageRequest Message
+data WriteMessageRequest  = WriteMessageRequest MessageContents
 data WriteMessageResponse = WriteMessageResponseOK
 instance HasStatus WriteMessageResponse
 

@@ -1,11 +1,12 @@
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Snap.Chat.API.Handlers 
+module Snap.Chat.API.Handlers
   ( apiHandlers
   ) where
 
 ------------------------------------------------------------------------------
+import           Control.Applicative
 import           Control.Exception (SomeException)
 import           Control.Monad
 import           Control.Monad.CatchIO
@@ -13,11 +14,13 @@ import           Control.Monad.Reader
 import           Data.Aeson
 import           Data.Aeson.Encode
 import           Data.Attoparsec hiding (try)
+import           Data.ByteString.Char8 (ByteString)
 import qualified Data.ByteString.Char8 as S
 import qualified Data.ByteString.Lazy.Char8 as L
 import qualified Data.Text as T
 import           Prelude hiding (catch)
 import           Snap.Types
+import           System.PosixCompat.Time
 import           Web.ClientSession
 ------------------------------------------------------------------------------
 import           Snap.Chat.ChatRoom
@@ -29,7 +32,7 @@ import           Snap.Chat.Internal.API.Types
 apiHandlers :: Key -> ChatRoom -> Snap ()
 apiHandlers key chatRoom =
     flip runReaderT chatRoom $
-         route [ ("join",  apiCall handleJoin               )
+         route [ ("join",  apiCall $ handleJoin key             )
                , ("leave", authenticatingApiCall key handleLeave)
                , ("fetch", authenticatingApiCall key handleFetch)
                , ("write", authenticatingApiCall key handleWrite)
@@ -75,7 +78,7 @@ apiCall f = method POST $ do
         putResponse emptyResponse
         writeText $ "Error decoding JSON input:\n"
         writeText $ T.pack $ show e
-        getResponse >>= finishWith . setResponseCode 415    
+        getResponse >>= finishWith . setResponseCode 415
 
 
 ------------------------------------------------------------------------------
@@ -114,44 +117,82 @@ authenticate key f apiRequest = do
                                  Success sess -> auth sess)
                           (parseOnly json txt))
           mbDecryptedText
-               
+
   where
     encodedSession  = _encodedSession apiRequest
     requestData     = _requestData    apiRequest
     mbDecryptedText = decrypt key encodedSession
 
-    auth (EncodedSession token userName) = do
+    auth (EncodedSession token oldTime userName) = do
         chatRoom <- ask :: ApiHandler ChatRoom
-        eUser    <- try $ liftIO $ authenticateUser userName token chatRoom
-        either (\(_::SomeException) -> return authenticationFailure)
-               (\user -> do
-                    resp <- f user requestData
-                    let newSession = EncodedSession (_userToken user) userName
-                    let newEncodedSession = S.concat $ L.toChunks $
-                                            encode newSession
-                    if isFailure resp
-                      then return $ ApiResponseFailure (failureCode resp)
-                                                       (failureReason resp)
-                      else return $ ApiResponseSuccess newEncodedSession resp)
-               eUser
+        now <- liftIO epochTime
+        if now - oldTime > toEnum (_userTimeout chatRoom)
+          then return authenticationFailure
+          else do
+            eUser    <- try $ liftIO $ authenticateUser userName token
+                                                        chatRoom
+            either (\(_::SomeException) -> return authenticationFailure)
+                   (\user -> do
+                        resp <- f user requestData
+                        newEncodedSession <- liftIO $ encodeSession key user
+                        if isFailure resp
+                          then return $
+                               ApiResponseFailure (failureCode resp)
+                                                  (failureReason resp)
+                          else return $
+                               ApiResponseSuccess newEncodedSession resp)
+                   eUser
 
 
 ------------------------------------------------------------------------------
-handleJoin :: JoinRequest
+encodeSession :: Key -> User -> IO ByteString
+encodeSession key (User name _ token _) = epochTime >>= newEncodedSession
+  where
+    newEncodedSession now = do
+        let newSession = EncodedSession token now name
+        encryptIO key $ S.concat $ L.toChunks $ encode newSession
+
+------------------------------------------------------------------------------
+handleJoin :: Key
+           -> JoinRequest
             -> ApiHandler (ApiResponse JoinResponse)
-handleJoin = undefined
+handleJoin key (JoinRequest userName) = do
+    (ask >>= joinUp) `catch` \(_ :: UserAlreadyConnectedException) -> do
+        return $ ApiResponseFailure (failureCode resp) (failureReason resp)
+  where
+    resp = JoinResponseUserAlreadyExists
+
+    joinUp chatRoom = do
+        user <- liftIO $ joinUser userName chatRoom
+        newEncodedSession <- liftIO $ encodeSession key user
+        return $ ApiResponseSuccess newEncodedSession JoinResponseOK
 
 
 ------------------------------------------------------------------------------
 handleLeave :: User -> LeaveRequest -> ApiHandler LeaveResponse
-handleLeave = undefined
+handleLeave user _ = do
+    ask >>= liftIO . disconnectUser userName disconnectionReason
+    return LeaveResponseOK
+  where
+    userName = _userName user
+    disconnectionReason = T.concat [ " has left the channel." ]
 
 
 ------------------------------------------------------------------------------
 handleFetch :: User -> GetMessagesRequest -> ApiHandler GetMessagesResponse
-handleFetch = undefined
+handleFetch user _ = do
+    setTimeout $ defaultTimeout + 10
+    msgs <- ask >>= liftIO . getMessages defaultTimeout user
+    return $ GetMessagesOK msgs
 
 
 ------------------------------------------------------------------------------
 handleWrite :: User -> WriteMessageRequest -> ApiHandler WriteMessageResponse
-handleWrite = undefined
+handleWrite user (WriteMessageRequest msg) = do
+    ask >>= liftIO . writeMessageContents msg user
+    return WriteMessageResponseOK
+
+
+------------------------------------------------------------------------------
+defaultTimeout :: Int
+defaultTimeout = 50

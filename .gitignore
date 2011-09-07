@@ -2,8 +2,11 @@ dist/**
 dist
 test/dist/**
 test/dist
+.hpc
 test/.hpc
 test/.hpc/**
+log/*.log
+*.aes
 *~
 *#
 #*

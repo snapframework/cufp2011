@@ -13,6 +13,7 @@ module Snap.Chat.ChatRoom
   , disconnectUser
   , getMessages
   , writeMessage
+  , writeMessageContents
 
     -- * Exceptions
   , UserAlreadyConnectedException
@@ -130,9 +131,7 @@ joinUser userName chatRoom = withMVar userMapMVar $ \userMap -> do
     return user
 
   where
-    disconnectionMessage = T.concat [ "User "
-                                    , userName
-                                    , " has left the channel (timeout). "
+    disconnectionMessage = T.concat [ " has left the channel (timeout). "
                                     ]
 
     timeoutManager = _timeoutManager chatRoom
@@ -183,13 +182,8 @@ authenticateUser userName userToken chatRoom =
               (\user ->
                    if getUserToken user /= userToken
                      then throwIO $ UserAuthenticationFailureException userName
-                     else do
-                       newToken <- makeUserToken
-                       let u' = user { _userToken = newToken }
-                       HT.insert userMap userName u'
-                       return u')
+                     else return user)
               mbU
-                   
 
 
 ------------------------------------------------------------------------------
@@ -221,6 +215,14 @@ writeMessage msg user cr = do
     timeoutHandle = _timeoutHandle user
     userTimeout = _userTimeout cr
 
+
+------------------------------------------------------------------------------
+-- | Write a message to the channel.
+writeMessageContents :: MessageContents -> User -> ChatRoom -> IO ()
+writeMessageContents msgContents user cr = do
+    now <- epochTime
+    let userName = _userName user
+    writeMessage (Message userName now msgContents) user cr
 
 
 

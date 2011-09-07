@@ -48,7 +48,7 @@ Library
                        Snap.Chat.Internal.Util,
                        System.TimeoutManager
 
-  ghc-options: -O2 -Wall -fhpc -fwarn-tabs -funbox-strict-fields -threaded
+  ghc-options: -O2 -Wall -fwarn-tabs -funbox-strict-fields -threaded
                -fno-warn-unused-do-bind
 
 
@@ -71,5 +71,5 @@ Executable snap-chat
                        text              >= 0.11  && < 0.12,
                        unix-compat       >= 0.2   && < 0.4
 
-  ghc-options: -O2 -Wall -fhpc -fwarn-tabs -funbox-strict-fields -threaded
+  ghc-options: -O2 -Wall -fwarn-tabs -funbox-strict-fields -threaded
                -fno-warn-unused-do-bind

@@ -144,5 +144,5 @@ testAuthenticate = testCase "chatroom/authenticate" $
         expectExceptionH $ authenticateUser userName2 oldToken chatRoom
         user' <- authenticateUser userName oldToken chatRoom
 
-        -- expect the token to have changed.
-        assertBool "token didn't change" $ getUserToken user' /= oldToken
+        -- expect the token to not have changed.
+        assertBool "token didn't change" $ getUserToken user' == oldToken
