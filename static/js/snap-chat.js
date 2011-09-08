@@ -40,13 +40,48 @@
           </div>\
         </div>';
 
+    var scrollToBottom = function(dataObj) {
+        var chatDiv = dataObj['chatDiv'];
+        var $buffer = $('.buffer', chatDiv);
+        var ov = $buffer.css('overflow');
+        if (ov == 'auto') {
+            /* we're on a normal computer */
+            $b = $buffer;
+            threshold = 10;
+            oh = $buffer.outerHeight();
+        } else {
+            /* we're on a handheld here. */
+            $b = $('body');
+            threshold = 30;
+            oh = $(window).height();
+        }
+
+        $b.scrollTop($b.prop('scrollHeight') - oh);
+    }
+
     var addMessageToBuffer = function(dataObj, message) {
         var chatDiv = dataObj['chatDiv'];
         var $buffer = $('.buffer', chatDiv);
         /* Are we at the bottom already? */
         var atBottom = false;
-        if ($buffer.prop('scrollTop') + $buffer.outerHeight() >=
-            $buffer.prop('scrollHeight') - 5) {
+        var ov = $buffer.css('overflow');
+        var $b, threshold, oh;
+
+        if (ov == 'auto') {
+            /* we're on a normal computer */
+            $b = $buffer;
+            threshold = 10;
+            oh = $buffer.outerHeight();
+        } else {
+            /* we're on a handheld here. */
+            $b = $('body');
+            threshold = 30;
+            oh = $(window).height();
+        }
+
+
+        if ($b.prop('scrollTop') + oh >=
+            $b.prop('scrollHeight') - threshold) {
             atBottom = true;
         }
 
@@ -55,7 +90,7 @@
 
         if (atBottom) {
             setTimeout(function() {
-                $buffer.scrollTop($buffer.prop('scrollHeight') - $buffer.outerHeight());
+                scrollToBottom(dataObj);
             }, 1);
         }
 
@@ -171,6 +206,8 @@
                     'text': messageText };
         }
 
+        scrollToBottom(dataObj);
+
         ajaxCall('/api/write',
                  dataObj,
                  msg,
@@ -265,7 +302,7 @@
 
         $('.top-message',chatDiv).text(
             dataObj['desiredUserName'] + '@snap-chat');
-        
+
         $button.click(function () {
             sendMessage(dataObj);
         });
@@ -275,6 +312,14 @@
                 sendMessage(dataObj);
                 e.preventDefault();
             }
+        });
+
+        // $input.focusin(function() {
+        //     scrollToBottom(dataObj);
+        // });
+
+        $input.bind('touchmove',function(e){
+            e.preventDefault();
         });
 
         setTimeout(function() { $input.focus(); }, 500);

@@ -1,0 +1,413 @@
+/*----------------------------------------------------------------------------
+   http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+----------------------------------------------------------------------------*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+/*--------------------------------------------------------------------------*/
+
+html {
+    font-family: sans-serif;
+    font-size: small;
+    background: #565;
+    color: #222;
+}
+
+body {
+    line-height: 1.4em;
+}
+
+
+a:link, a:hover, a:active, a:visited {
+    color: #33d;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: medium;
+    font-weight: bold;
+    margin: 0 0 1em 0;
+    letter-spacing: -0.05em;
+}
+
+.loginwindow h1 {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.loginwindow h1 span { vertical-align: middle; }
+.loginwindow h1 img  {
+    width: 48px;
+    height: 41.5px;
+    vertical-align: middle;
+}
+
+.loginwindow p.error { color: #911; }
+
+p {
+    letter-spacing: -0.025em;
+    margin-bottom: 1.4em;
+}
+
+.loginwindow {
+    max-width: 70ex;
+    width: 75%;
+    height: auto;
+    margin: 1em auto;
+    padding: 1em;
+    -moz-border-radius: 6px; -webkit-border-radius: 6px; border-radius: 6px;
+}
+
+.chatroom {
+    position: relative;
+    width: 85%;
+    max-width: 800px;
+    min-height: 100%;
+    top:0;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.chatroom .chatroom-buffer {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    min-height: 100%;
+/*    overflow: hidden;*/
+}
+
+.chatroom .chatroom-buffer .buffer {
+    position: relative;
+    min-height: 100%;
+    left: 0; top: 0; right: 0; height: auto;
+}
+
+.chatroom .chatroom-buffer .chattext {
+    padding: 3em 1ex 2.75em 1ex;
+}
+
+.chatroom .chatroom-buffer .buffer p {
+    margin: 0; padding: 0;
+}
+
+.chatroom p.message {
+    font-size: small;
+    background: #eee;
+}
+
+.chatroom p.meta {
+    font-size: small;
+    font-style: italic;
+    background: #eee;
+}
+
+.chatroom p.message .time {
+    color: #777;
+    font-size: x-small;
+    font-family: monospace;
+    font-style: normal;
+    padding-right: 1em;
+}
+
+.chatroom p.message .username {
+    color: #005;
+    font-weight: bold;
+    padding-right: 0.5ex;
+}
+
+.chatroom .chatroom-input {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2.75em;
+    line-height: 2.75em;
+    background: #cdc;
+}
+
+.chatroom .chatroom-input form {
+    position: absolute;
+    height: 2.75em;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 2.75em;
+}
+
+.chatroom .chatroom-input table {
+    width: 100%;
+    text-align: left;
+    margin: 0 auto;
+}
+
+.chatroom .chatroom-input form td.inputcell {
+    padding: 0 1ex;
+}
+
+.chatroom .chatroom-input form td.buttoncell {
+    padding: 0 1ex 0 0;
+}
+
+.chatroom .chatroom-input form button {
+    width: 100%;
+    font-size: x-small !important;
+    vertical-align: middle;
+}
+
+.chatroom .chatroom-input form input.chatinput {
+    height: 1.25em;
+    font-size: small;
+    width: 98%;
+    border: solid 1px 9a9;
+    vertical-align: middle;
+}
+
+input.disabled {
+    background: #999 !important;
+    color: #999 !important;
+    border: 0;
+}
+
+.chatroom .chatroom-top {
+    text-align: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3em;
+    line-height: 3em;
+    background: #454;
+    z-index: 5000;
+}
+
+.chatroom .chatroom-top form {
+    position:absolute;
+    top:1.5em;
+    left:2em;
+    height:2.5em;
+    margin-top: -1.25em;
+    vertical-align: middle;
+}
+
+.chatroom .chatroom-top div.top-header {
+    position: absolute;
+    color: white;
+    font-weight: bold;
+    height: 3em;
+    width: auto;
+    top: 0; right: 2em;
+    vertical-align: middle;
+}
+
+.chatroom .chatroom-top div.top-header span {
+    font-size: x-small;
+    vertical-align: middle;
+}
+
+.chatroom .chatroom-top div.top-header img {
+    width: 19.2px;
+    height: 16.6px;
+    vertical-align: middle;
+}
+
+.chatroom .chatroom-top form button {
+    position:absolute;
+    font-size: x-small !important;
+    top:0; left:0; bottom:0; width: 9em;
+    vertical-align: middle;
+}
+
+#chat-frame {
+    width: 100%; height: 100%; position: absolute; top:0; left: 0;
+    text-align: center;
+}
+
+.chatwindow {
+    background: #eee;
+}
+
+.loginwindow div.form {
+    border: 2px outset #999;
+    -moz-border-radius: 6px; -webkit-border-radius: 6px; border-radius: 6px;
+    width: 90%;
+    margin: 1.4em auto;
+    text-align: center;
+}
+
+.loginwindow .form form {
+    padding: 1.5em;
+}
+
+.loginwindow .form form label {
+    color: #777;
+    text-shadow: 1px 1px 0px #fff;
+    padding-right: 1ex;
+}
+
+.loginwindow .form form input.username {
+    font-size: medium;
+    border: solid 1px 9a9;
+    padding: 4px;
+    width: 60%;
+    margin: 1ex auto;
+}
+
+
+
+/*----------------------------------------------------------------------------
+  CSS buttons borrowed from https://github.com/ubuwaits/css3-buttons
+
+  Copyright (c) 2011 Chad Mazzola
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+----------------------------------------------------------------------------*/
+
+button.cupid-green {
+  background-color: #7fbf4d;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#7fbf4d), to(#63a62f));
+  /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #7fbf4d, #63a62f);
+  background-image: -moz-linear-gradient(top, #7fbf4d, #63a62f);
+  background-image: -ms-linear-gradient(top, #7fbf4d, #63a62f);
+  background-image: -o-linear-gradient(top, #7fbf4d, #63a62f);
+  background-image: linear-gradient(top, #7fbf4d, #63a62f);
+  border: 1px solid #63a62f;
+  border-bottom: 1px solid #5b992b;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 1px 0 0 #96ca6d;
+  -moz-box-shadow: inset 0 1px 0 0 #96ca6d;
+  -ms-box-shadow: inset 0 1px 0 0 #96ca6d;
+  -o-box-shadow: inset 0 1px 0 0 #96ca6d;
+  box-shadow: inset 0 1px 0 0 #96ca6d;
+  color: #fff;
+  /*font-weight: bold;*/
+  font-size: small;
+  line-height: 1;
+  padding: 7px 15px 8px 15px;
+  text-align: center;
+  text-shadow: 0 -1px 0 #4c9021;
+  width: auto; }
+  button.cupid-green:hover {
+    background-color: #76b347;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#76b347), to(#5e9e2e));
+    /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, #76b347, #5e9e2e);
+    background-image: -moz-linear-gradient(top, #76b347, #5e9e2e);
+    background-image: -ms-linear-gradient(top, #76b347, #5e9e2e);
+    background-image: -o-linear-gradient(top, #76b347, #5e9e2e);
+    background-image: linear-gradient(top, #76b347, #5e9e2e);
+    -webkit-box-shadow: inset 0 1px 0 0 #8dbf67;
+    -moz-box-shadow: inset 0 1px 0 0 #8dbf67;
+    -ms-box-shadow: inset 0 1px 0 0 #8dbf67;
+    -o-box-shadow: inset 0 1px 0 0 #8dbf67;
+    box-shadow: inset 0 1px 0 0 #8dbf67;
+    cursor: pointer; }
+  button.cupid-green:active {
+    border: 1px solid #5b992b;
+    border-bottom: 1px solid #538c27;
+    -webkit-box-shadow: inset 0 0 8px 4px #548c29, 0 1px 0 0 #eeeeee;
+    -moz-box-shadow: inset 0 0 8px 4px #548c29, 0 1px 0 0 #eeeeee;
+    -ms-box-shadow: inset 0 0 8px 4px #548c29, 0 1px 0 0 #eeeeee;
+    -o-box-shadow: inset 0 0 8px 4px #548c29, 0 1px 0 0 #eeeeee;
+    box-shadow: inset 0 0 8px 4px #548c29, 0 1px 0 0 #eeeeee; }
+
+
+button.cupid-disabled {
+  background-color: #777;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#777), to(#666));
+  /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #777, #666);
+  background-image: -moz-linear-gradient(top, #777, #666);
+  background-image: -ms-linear-gradient(top, #777, #666);
+  background-image: -o-linear-gradient(top, #777, #666);
+  background-image: linear-gradient(top, #777, #666);
+  border: 1px solid #666;
+  border-bottom: 1px solid #5b992b;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 1px 0 0 #999;
+  -moz-box-shadow: inset 0 1px 0 0 #999;
+  -ms-box-shadow: inset 0 1px 0 0 #999;
+  -o-box-shadow: inset 0 1px 0 0 #999;
+  box-shadow: inset 0 1px 0 0 #999;
+  color: #fff;
+  /*font-weight: bold;*/
+  font-size: small;
+  line-height: 1;
+  padding: 7px 15px 8px 15px;
+  text-align: center;
+  text-shadow: 0 -1px 0 #4c9021;
+  width: auto;
+  cursor: default;
+}

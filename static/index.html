@@ -10,7 +10,12 @@
     <script type="text/javascript">
       $(document).ready(function() {$('#chat-frame').snapChat()});
     </script>
-    <link rel="stylesheet" type="text/css" href="css/chat.css"></link>
+    <link rel="stylesheet" media="screen and (min-width: 801px)"
+          type="text/css" href="css/chat-large.css"></link>
+    <link rel="stylesheet" media="screen and (max-width: 800px)"
+          type="text/css" href="css/chat-small.css"></link>
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;" />
   </head>
   <body>
     <div id="chat-frame">

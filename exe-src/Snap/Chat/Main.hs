@@ -21,4 +21,4 @@ handler key chatRoom = route [ (""      , root                    )
 main :: IO ()
 main = do
     key <- getDefaultKey
-    withChatRoom 240 $ quickHttpServe . handler key
+    withChatRoom 200 $ quickHttpServe . handler key
