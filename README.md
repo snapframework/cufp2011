@@ -102,7 +102,7 @@ A session will only be considered valid if:
     model.
 
 
-#### `/api/join`
+#### /api/join
 
 The "join" command is responsible for connecting a user to the chat room with a
 given user name.
@@ -129,7 +129,7 @@ Example unsuccessful response:
     }
 
 
-#### `/api/leave`
+#### /api/leave
 
 The "leave" command logs the user out of the chat room.
 
@@ -148,7 +148,7 @@ Example successful response:
       "response": {}
     }
 
-#### `/api/fetch`
+#### /api/fetch
 
 The "fetch" command gets new messages from the chat room, blocking for up to 50
 seconds before it returns with a list of new messages, possibly empty.
@@ -179,7 +179,7 @@ The JSON type of messages is as follows:
     }
 
 
-#### `/api/write`
+#### /api/write
 
 The "write" command writes a message to the chat room.
 
