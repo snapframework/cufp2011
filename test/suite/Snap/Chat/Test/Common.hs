@@ -11,6 +11,8 @@ module Snap.Chat.Test.Common
   , expectException
   , expectExceptionH
   , eatException
+  , propJSONInvertible
+  , fromRight
   ) where
 
 import           Control.Applicative
@@ -19,11 +21,14 @@ import           Control.Exception (SomeException(..), evaluate)
 import           Control.Monad
 import           Control.Monad.CatchIO
 import           Control.Monad.Trans
+import           Data.Aeson
+import           Data.ByteString.Char8 (ByteString)
+import qualified Data.ByteString.Char8 as S
 import           Data.Typeable
 import           Prelude hiding (catch)
 import qualified Data.Text as T
 import           Data.Text (Text)
-import           Test.QuickCheck
+import           Test.QuickCheck hiding (Success)
 import qualified Test.QuickCheck.Monadic as QC
 import           Test.QuickCheck.Monadic
 import           Snap.Chat.Internal.Types
@@ -103,6 +108,12 @@ instance Arbitrary Text where
         txt <- listOf $ elements $ ['a'..'z'] ++ ['0'..'9'] ++ " ._"
         return $ T.pack txt
 
+------------------------------------------------------------------------------
+instance Arbitrary ByteString where
+    arbitrary = do
+        -- we don't need a full character set here
+        txt <- listOf $ elements $ ['a'..'z'] ++ ['0'..'9'] ++ " ._"
+        return $ S.pack txt
 
 ------------------------------------------------------------------------------
 instance Arbitrary MessageContents where
@@ -126,3 +137,18 @@ instance Arbitrary Message where
       where
         l = 1314070521
         h = 1344070521
+
+------------------------------------------------------------------------------
+propJSONInvertible :: (Eq a, FromJSON a, ToJSON a) => a -> Bool
+propJSONInvertible x = case result of
+                         Error _   -> False
+                         Success y -> x == y
+  where
+    result = fromJSON $ toJSON x
+
+
+------------------------------------------------------------------------------
+fromRight :: Either String a -> a
+fromRight (Left e)  = error e
+fromRight (Right r) = r
+

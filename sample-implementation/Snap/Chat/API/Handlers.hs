@@ -6,7 +6,6 @@ module Snap.Chat.API.Handlers
   ) where
 
 ------------------------------------------------------------------------------
-import           Control.Applicative
 import           Control.Exception (SomeException)
 import           Control.Monad
 import           Control.Monad.CatchIO
@@ -20,6 +19,7 @@ import qualified Data.ByteString.Lazy.Char8 as L
 import           Data.Char
 import qualified Data.Text as T
 import           Prelude hiding (catch)
+import           Snap.Iteratee (($$), consume, joinI, takeNoMoreThan)
 import           Snap.Types
 import           System.PosixCompat.Time
 import           Web.ClientSession
@@ -55,15 +55,15 @@ apiCall :: (FromJSON req, ToJSON resp) =>
            (req -> ApiHandler (ApiResponse resp))
         -> ApiHandler ()
 apiCall f = method POST $ do
-    -- Check that the content-type is JSON.
+    -- Check that the content-type is JSON. Strip off any charset suffixes.
     ct <- liftM (fmap (S.takeWhile (\c -> c /= ';' && not (isSpace c)))
                       . getHeader "Content-Type") getRequest
-    
+
     when (ct /= Just "application/json") $
          finishWith $ setResponseCode 415 emptyResponse
 
     -- Grab the JSON request body
-    jsonInput <- liftM (S.concat . L.toChunks) getRequestBody
+    jsonInput <- fetchRequestBody
 
     let parseResult = parseOnly json jsonInput
     either errorOut
@@ -77,6 +77,11 @@ apiCall f = method POST $ do
                     writeBuilder $ fromValue $ toJSON output)
            parseResult
   where
+    maxSize = 131072    -- 128 kB should be enough for anybody
+
+    fetchRequestBody = liftM S.concat $ runRequestBody $
+                       joinI $ takeNoMoreThan maxSize $$ consume
+
     errorOut e = do
         putResponse emptyResponse
         writeText $ "Error decoding JSON input:\n"

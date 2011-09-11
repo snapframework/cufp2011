@@ -165,7 +165,7 @@ Example successful response:
     {
       "status": "ok",
       "session": "abc.....def",
-      "response": [ ...messages... ]
+      "response": { "messages": [ ...messages... ] }
     }
 
 The JSON type of messages is as follows:
