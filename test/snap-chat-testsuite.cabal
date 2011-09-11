@@ -4,7 +4,7 @@ build-type:     Simple
 cabal-version:  >= 1.6
 
 Executable testsuite
-  hs-source-dirs:  ../lib-src suite
+  hs-source-dirs:  ../src suite
   main-is:         TestSuite.hs
 
   Build-depends:
