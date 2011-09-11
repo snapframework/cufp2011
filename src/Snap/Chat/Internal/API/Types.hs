@@ -20,12 +20,14 @@ import           Snap.Chat.Internal.Types
 ------------------------------------------------------------------------------
 type ApiHandler a = ReaderT ChatRoom Snap a
 
+
 ------------------------------------------------------------------------------
 data ApiRequest req = ApiRequest {
       _encodedSession :: ByteString
     , _requestData    :: req
     }
   deriving (Eq, Show)
+
 
 ------------------------------------------------------------------------------
 data ApiResponse resp = ApiResponseSuccess {
@@ -37,6 +39,7 @@ data ApiResponse resp = ApiResponseSuccess {
                         , _failureReason :: Text
                         }
   deriving (Eq, Show)
+
 
 ------------------------------------------------------------------------------
 authenticationFailure :: ApiResponse a
@@ -53,18 +56,11 @@ data EncodedSession = EncodedSession {
   deriving (Eq, Show)
 
 instance FromJSON EncodedSession where
-    parseJSON (Object obj) = EncodedSession             <$>
-                             obj .: "token"             <*>
-                             (toEnum <$> obj .: "time") <*>
-                             obj .: "user"
+    parseJSON (Object obj) = toBeImplemented
     parseJSON _ = fail "EncodedSession: JSON object of wrong type"
 
 instance ToJSON EncodedSession where
-    toJSON (EncodedSession tok time user) =
-        Object $ Map.fromList [ ("token", toJSON tok            )
-                              , ("user",  toJSON user           )
-                              , ("time",  toJSON $ fromEnum time)
-                              ]
+    toJSON (EncodedSession tok time user) = toBeImplemented
 
 ------------------------------------------------------------------------------
 class HasStatus a where
@@ -80,26 +76,15 @@ class HasStatus a where
 
 ------------------------------------------------------------------------------
 instance (FromJSON req) => FromJSON (ApiRequest req) where
-    parseJSON (Object obj) = ApiRequest          <$>
-                             obj .: "session"    <*>
-                             obj .: "requestData"
-
+    parseJSON (Object obj) = toBeImplemented
     parseJSON _ = fail "ApiRequest: JSON object of wrong type"
 
 
 ------------------------------------------------------------------------------
 instance (ToJSON resp) => ToJSON (ApiResponse resp) where
-    toJSON (ApiResponseSuccess s r) =
-        Object $ Map.fromList [ ("status"  , toJSON ("ok"::Text))
-                              , ("session" , toJSON s           )
-                              , ("response", toJSON r           )
-                              ]
+    toJSON (ApiResponseSuccess s r) = toBeImplemented
+    toJSON (ApiResponseFailure code reason) = toBeImplemented
 
-    toJSON (ApiResponseFailure code reason) =
-        Object $ Map.fromList [ ("status"    , toJSON ("failure"::Text))
-                              , ("statusCode", toJSON code             )
-                              , ("reason"    , toJSON reason           )
-                              ]
 
 
 ------------------------------------------------------------------------------
@@ -128,7 +113,7 @@ instance HasStatus JoinResponse where
 
 ------------------------------------------------------------------------------
 instance FromJSON JoinRequest where
-    parseJSON (Object obj) = JoinRequest <$> obj .: "desiredUserName"
+    parseJSON (Object obj) = toBeImplemented
     parseJSON _            = fail "JoinRequest: JSON object of wrong type"
 
 instance ToJSON JoinResponse where
@@ -166,8 +151,7 @@ instance FromJSON GetMessagesRequest where
     parseJSON _ = pure GetMessagesRequest
 
 instance ToJSON GetMessagesResponse where
-    toJSON (GetMessagesOK msgs) =
-        Object $ Map.fromList [ ("messages", toJSON msgs) ]
+    toJSON (GetMessagesOK msgs) = toBeImplemented
 
 
 ------------------------------------------------------------------------------
@@ -180,7 +164,7 @@ data WriteMessageResponse = WriteMessageResponseOK
 instance HasStatus WriteMessageResponse
 
 instance FromJSON WriteMessageRequest where
-    parseJSON obj = WriteMessageRequest <$> parseJSON obj
+    parseJSON obj = toBeImplemented
 
 instance ToJSON WriteMessageResponse where
     toJSON _ = Object Map.empty

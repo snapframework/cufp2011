@@ -204,6 +204,19 @@ Example successful response:
 
 ## What students must implement
 
+Several functions and instances in the source tree have been marked as
+"toBeImplemented". Tutorial attendees must implement:
+
+  * `ToJSON` and `FromJSON` instances for the types in
+    `src/Snap/Chat/Internal/API/Types.hs`.
+    
+  * `ToJSON` and `FromJSON` instances for the message types in
+    `src/Snap/Chat/Internal/Types.hs`.
+    
+  * all of the stubbed-out functions in `src/Snap/Chat/API/Handlers.hs`.
+
+You'll need to use the functions from `src/Snap/Chat/ChatRoom.hs`, which
+contains all of the "business logic" for the chat rooms.
 
 
 ## Extra credit

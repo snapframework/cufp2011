@@ -62,31 +62,16 @@ apiCall f = method POST $ do
     when (ct /= Just "application/json") $
          finishWith $ setResponseCode 415 emptyResponse
 
-    -- Grab the JSON request body
-    jsonInput <- fetchRequestBody
 
-    let parseResult = parseOnly json jsonInput
-    either errorOut
-           (\obj -> do
-                let input = fromJSON obj
-                case input of
-                  Error e   -> errorOut e
-                  Success a -> do
-                    output <- f a
-                    modifyResponse $ setContentType "application/json"
-                    writeBuilder $ fromValue $ toJSON output)
-           parseResult
+    -- Your code goes here.
+    toBeImplemented
+
   where
     maxSize = 131072    -- 128 kB should be enough for anybody
 
+    fetchRequestBody :: ApiHandler ByteString
     fetchRequestBody = liftM S.concat $ runRequestBody $
                        joinI $ takeNoMoreThan maxSize $$ consume
-
-    errorOut e = do
-        putResponse emptyResponse
-        writeText $ "Error decoding JSON input:\n"
-        writeText $ T.pack $ show e
-        getResponse >>= finishWith . setResponseCode 415
 
 
 ------------------------------------------------------------------------------
@@ -116,40 +101,8 @@ authenticate :: (FromJSON req, ToJSON resp, HasStatus resp) =>
              -> ApiRequest req
              -> ApiHandler (ApiResponse resp)
 authenticate key f apiRequest = do
-    maybe (return authenticationFailure)
-          (\txt -> either (const $ return authenticationFailure)
-                          (\obj -> do
-                               let input = fromJSON obj
-                               case input of
-                                 Error _      -> return authenticationFailure
-                                 Success sess -> auth sess)
-                          (parseOnly json txt))
-          mbDecryptedText
-
-  where
-    encodedSession  = _encodedSession apiRequest
-    requestData     = _requestData    apiRequest
-    mbDecryptedText = decrypt key encodedSession
-
-    auth (EncodedSession token oldTime userName) = do
-        chatRoom <- ask :: ApiHandler ChatRoom
-        now <- liftIO epochTime
-        if now - oldTime > toEnum (_userTimeout chatRoom)
-          then return authenticationFailure
-          else do
-            eUser    <- try $ liftIO $ authenticateUser userName token
-                                                        chatRoom
-            either (\(_::SomeException) -> return authenticationFailure)
-                   (\user -> do
-                        resp <- f user requestData
-                        newEncodedSession <- liftIO $ encodeSession key user
-                        if isFailure resp
-                          then return $
-                               ApiResponseFailure (failureCode resp)
-                                                  (failureReason resp)
-                          else return $
-                               ApiResponseSuccess newEncodedSession resp)
-                   eUser
+    -- Your code goes here.
+    toBeImplemented
 
 
 ------------------------------------------------------------------------------
@@ -160,45 +113,35 @@ encodeSession key (User name _ token _) = epochTime >>= newEncodedSession
         let newSession = EncodedSession token now name
         encryptIO key $ S.concat $ L.toChunks $ encode newSession
 
+
 ------------------------------------------------------------------------------
 handleJoin :: Key
            -> JoinRequest
-            -> ApiHandler (ApiResponse JoinResponse)
+           -> ApiHandler (ApiResponse JoinResponse)
 handleJoin key (JoinRequest userName) = do
-    (ask >>= joinUp) `catch` \(_ :: UserAlreadyConnectedException) -> do
-        return $ ApiResponseFailure (failureCode resp) (failureReason resp)
-  where
-    resp = JoinResponseUserAlreadyExists
-
-    joinUp chatRoom = do
-        user <- liftIO $ joinUser userName chatRoom
-        newEncodedSession <- liftIO $ encodeSession key user
-        return $ ApiResponseSuccess newEncodedSession JoinResponseOK
-
+    -- Your code goes here.
+    toBeImplemented
 
 ------------------------------------------------------------------------------
 handleLeave :: User -> LeaveRequest -> ApiHandler LeaveResponse
 handleLeave user _ = do
-    ask >>= liftIO . disconnectUser userName disconnectionReason
-    return LeaveResponseOK
-  where
-    userName = _userName user
-    disconnectionReason = T.concat [ " has left the channel." ]
+    -- Your code goes here
+    toBeImplemented
 
 
 ------------------------------------------------------------------------------
 handleFetch :: User -> GetMessagesRequest -> ApiHandler GetMessagesResponse
 handleFetch user _ = do
     setTimeout $ defaultTimeout + 10
-    msgs <- ask >>= liftIO . getMessages defaultTimeout user
-    return $ GetMessagesOK msgs
+    -- Your code goes here.
+    toBeImplemented
 
 
 ------------------------------------------------------------------------------
 handleWrite :: User -> WriteMessageRequest -> ApiHandler WriteMessageResponse
 handleWrite user (WriteMessageRequest msg) = do
-    ask >>= liftIO . writeMessageContents msg user
-    return WriteMessageResponseOK
+    -- Your code goes here.
+    toBeImplemented
 
 
 ------------------------------------------------------------------------------

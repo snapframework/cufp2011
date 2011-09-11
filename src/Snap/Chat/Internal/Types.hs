@@ -23,7 +23,13 @@ import           System.TimeoutManager (TimeoutManager, TimeoutHandle)
 
 
 ------------------------------------------------------------------------------
+toBeImplemented :: a
+toBeImplemented = error "*** TODO: implement this ***"
+
+
+------------------------------------------------------------------------------
 type UserName = Text
+
 
 ------------------------------------------------------------------------------
 data MessageContents = Talk   { _messageText :: !Text }
@@ -34,45 +40,16 @@ data MessageContents = Talk   { _messageText :: !Text }
 
 
 instance FromJSON MessageContents where
-    parseJSON (Object obj) = do
-        ty <- (obj .: "type") :: A.Parser Text
-        case ty of
-          "talk"    -> Talk          <$>
-                       obj .: "text"
-
-          "action"  -> Action        <$>
-                       obj .: "text"
-
-          "join"    -> pure Join
-
-          "leave"   -> Leave         <$>
-                       obj .: "text"
-
-          _         -> fail "bad type"
-
+    parseJSON (Object obj) = toBeImplemented
     parseJSON _ = fail "MessageContents: JSON object of wrong type"
 
 
 ------------------------------------------------------------------------------
 instance ToJSON MessageContents where
-    toJSON (Talk t) =
-        Object $ Map.fromList [ ("type", toJSON ("talk"::Text))
-                              , ("text", toJSON t             )
-                              ]
-
-    toJSON (Action t) =
-        Object $ Map.fromList [ ("type", toJSON ("action"::Text))
-                              , ("text", toJSON t              )
-                              ]
-
-    toJSON (Join) =
-        Object $ Map.fromList [ ("type", toJSON ("join"::Text))
-                              ]
-
-    toJSON (Leave t) =
-        Object $ Map.fromList [ ("type", toJSON ("leave"::Text))
-                              , ("text", toJSON t              )
-                              ]
+    toJSON (Talk t)   = toBeImplemented
+    toJSON (Action t) = toBeImplemented
+    toJSON (Join)     = toBeImplemented
+    toJSON (Leave t)  = toBeImplemented
 
 
 ------------------------------------------------------------------------------
@@ -97,19 +74,11 @@ getMessageContents = _messageContents
 
 ------------------------------------------------------------------------------
 instance FromJSON Message where
-    parseJSON (Object obj) =
-        Message                    <$>
-        obj .: "user"              <*>
-        (toEnum <$> obj .: "time") <*>
-        obj .: "contents"
-
+    parseJSON (Object obj) = toBeImplemented
     parseJSON _ = fail "Message: JSON object of wrong type"
 
 instance ToJSON Message where
-    toJSON (Message u t c) =
-        Object $ Map.fromList [ ("user"    , toJSON u           )
-                              , ("time"    , toJSON $ fromEnum t)
-                              , ("contents", toJSON c           ) ]
+    toJSON (Message u t c) = toBeImplemented
 
 
 ------------------------------------------------------------------------------
