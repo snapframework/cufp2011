@@ -8,10 +8,10 @@ import           Control.Monad.Reader
 import           Data.Aeson
 import qualified Data.Aeson.Types as A
 import           Data.ByteString.Char8 (ByteString)
-import qualified Data.Map as Map
+import qualified Data.HashMap.Strict as Map
 import           Data.Text (Text)
 import qualified Data.Text as T
-import           Snap.Types
+import           Snap.Core
 import           System.Posix.Types
 ------------------------------------------------------------------------------
 import           Snap.Chat.Internal.Types

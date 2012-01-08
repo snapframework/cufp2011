@@ -5,8 +5,8 @@ module Main where
 import           Snap.Chat.API.Handlers
 import           Snap.Chat.ChatRoom
 import           Snap.Chat.Types
+import           Snap.Core
 import           Snap.Http.Server
-import           Snap.Types
 import           Snap.Util.FileServe
 import           Web.ClientSession
 

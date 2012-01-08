@@ -11,7 +11,6 @@ import           Control.Monad
 import           Control.Monad.CatchIO
 import           Control.Monad.Reader
 import           Data.Aeson
-import           Data.Aeson.Encode
 import           Data.Attoparsec hiding (try)
 import           Data.ByteString.Char8 (ByteString)
 import qualified Data.ByteString.Char8 as S
@@ -20,7 +19,7 @@ import           Data.Char
 import qualified Data.Text as T
 import           Prelude hiding (catch)
 import           Snap.Iteratee (($$), consume, joinI, takeNoMoreThan)
-import           Snap.Types
+import           Snap.Core
 import           System.PosixCompat.Time
 import           Web.ClientSession
 ------------------------------------------------------------------------------
@@ -74,7 +73,7 @@ apiCall f = method POST $ do
                   Success a -> do
                     output <- f a
                     modifyResponse $ setContentType "application/json"
-                    writeBuilder $ fromValue $ toJSON output)
+                    writeLBS $ encode $ toJSON output)
            parseResult
   where
     maxSize = 131072    -- 128 kB should be enough for anybody

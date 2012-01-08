@@ -12,7 +12,7 @@ import           Data.Aeson.Types
 import qualified Data.Attoparsec as A
 import qualified Data.ByteString.Char8 as S
 import qualified Data.ByteString.Lazy.Char8 as L
-import qualified Data.Map as Map
+import qualified Data.HashMap.Strict as Map
 import           Data.Maybe (isJust)
 import           Data.Text (Text)
 import           Test.Framework

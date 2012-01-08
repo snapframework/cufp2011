@@ -14,7 +14,7 @@ import qualified Data.Aeson.Types as A
 import           Data.ByteString (ByteString)
 import           Data.Data
 import qualified Data.HashTable.IO as HT
-import qualified Data.Map as Map
+import qualified Data.HashMap.Strict as Map
 import           Data.Monoid
 import           Data.Text (Text)
 import           System.Posix.Types
